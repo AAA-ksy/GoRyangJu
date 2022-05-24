@@ -17,6 +17,8 @@
     --blue: #284b63;
     --grey: #5e6472;
     --pink: #e0afa0;
+    --beige: #e8e8e4;
+    --lightblue:#bdd5ea;
 }
 
 html, body{
@@ -54,10 +56,10 @@ main{
 }
 
 .sidebar{
-    display: flex;
+    display: flex;  /*none : 보이지 않음, block : 블록 박스, inline : 인라인 박스, inline-block : block과 inline의 중간 형태*/
     flex-flow: column nowrap;
-    width: 120px;;
-    flex-shrink: 0;
+    width: 150px;;
+    flex-shrink: 0; /* flexible item들이 차지할 너비들에 대한 감소형 숫자를 지정*/
     border: 5px solid var(--blue);
     padding: 10px;
 }
@@ -101,6 +103,96 @@ main{
 .card > span{
     text-align: center;
     word-break: break-all;
+}
+
+.button{
+    margin-bottom : 15px;
+    padding-top: 7%;
+    vertical-align: center;
+    font-family : 'GimpoGothicBold00';
+    color:white;
+    font-size:120%;
+    text-align:center;
+    background-color: var(--navy);
+    border-radius : 5px;
+    cursor : pointer;
+}
+
+.button:hover{
+    color:var(--navy);
+    background-color: white;
+    border-color:var(--navy);    
+}
+
+.modal-background{
+    position:fixed; /*항상 고정된 위치에 배치, 배치 기준이 브라우저 전체화면, 얼마나 떨어져있는지 기입*/
+    top:0;
+    left:0;
+    width:100%; /*백분율값은 부모 요소를 기준*/
+    height:100%;
+    background-color: rgba(0,0,0,0.4);
+    z-index:10; /*요소들의 수직 위치 지정. 숫자가 클수록 위로, 작을수록 아래로*/
+}
+
+.modal{
+    display:flex;
+    flex-flow:column nowrap;    /*column : 항목을 세로방향으로 표시, nowrap : 기본값, 줄바꿈X*/
+    justify-content: center;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);    /*transform : 요소의 회전, 크기, 이동, 뒤틀림 등 처리 가능*/
+    width:400px;
+    height:400px;
+    background-color: #e8e8e4;
+    border-radius: 5px;
+    z-index:11;
+    padding:25px;
+}
+
+.modal-close{
+    position:absolute;
+    top:0;
+    right:0;
+    margin:10px;
+    font-size: 25px;
+    cursor:pointer;
+    z-index:12;
+}
+
+.modal-close:hover{
+    transform:scale(1.2);
+}
+
+.label{
+    font-size:20px;
+}
+
+.input{
+    margin-bottom:10px;
+    width:100%;
+    font-size:17px;
+    outline:none;
+    border:2px solid var(--grey);
+    border-radius:5px;
+}
+
+.input:focus{
+    border-color:var(--pink);
+}
+
+.submit-button{
+    background-color: var(--lightblue);
+    border-radius:5px;
+    border-style:solid;
+    padding-top:10px;
+    margin-top:30px;
+    cursor:pointer;
+    font-family:'GimpoGothicBold00';
+}
+
+.submit-button:hover{
+    background-color: var(--pink);
 }
 
 @media (max-width: 1200px){

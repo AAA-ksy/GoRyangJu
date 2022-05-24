@@ -11,6 +11,7 @@
     </header>
     <main>
         <div class="sidebar">
+            <button type="button" id="addBtn" class="button">추가</button>
             <span>로맨틱</span>
             <span>동물</span>
             <span>액션</span>
@@ -39,6 +40,22 @@
                 <span>귀여운 애니메이션과 더불어 신나는 음악까지!</span>
             </div>
         </section>
+            <div class="modal-background" id="modal">
+                <form class="modal" id="addForm">
+                    <span class="modal-close" id="closeModal">X</span>
+                    <label for="genre" class="label">장르</label>
+                    <input id="genre" type="text" placeholder="SF" class="input" required/>
+                    <label for="name" class="label">이름</label>
+                    <input id="name" type="text" placeholder="빽투더퓨처" class="input" required/>
+                    <label for="image" class="label">이미지</label>
+                    <input id="image" type="text" placeholder="URL" class="input" required/>
+                    <label for="content" class="label">내용</label>
+                    <input id="content" type="text" placeholder="제작연도 보면 깜짝놀랄 킬링타임용 SF!" class="input" required/>
+                    <button type="submit" class="submit-button">저장</button>
+                </form>
+            </div>
+        <script src="./modal.js"></script>
+        <script src="./add.js"></script>
     </main>
     </body>
 </html>
