@@ -11,7 +11,7 @@ description: 또 날려먹고 다시 쓰는 js DOM, EVENT
 ## DOM
 - Document Object Model
 - HTML 문서의 각 요소들을 트리형식으로 나타냄  
-![DOM-tree](../public/DOM_tree.jpg)
+![DOM-tree](/posts/DOM_tree.jpg)
 - 위 그림에서 하나의 객체를 노드라고 함
 - 모든 HTML 태그는 객체
 ### 노드 접근
@@ -89,7 +89,7 @@ document.querySelector('#first');   //id값은 고유값이므로 All 제외해�
 
 **[`nextElementSibling`]**
 - 형제 노드 중 다음 요소 노드 반환
-![Node-Access](../public/Node-Access.jpg)
+![Node-Access](/posts/Node-Access.jpg)
 
 # 3. 노드 생성, 추가, 복제, 삭제
 ## 노드 수정
@@ -137,9 +137,9 @@ newText;    //"pink"
 newLi2.appendChild(newText);
 ul.appendChild(newLi2);
 ```
-![createTextNode(1)](../public/createTextNode(1).jpg)
-![createTextNode(2)](../public/createTextNode(2).jpg)
-![createTextNode(3)](../public/createTextNode(3).jpg)
+![createTextNode(1)](/posts/createTextNode(1).jpg)
+![createTextNode(2)](/posts/createTextNode(2).jpg)
+![createTextNode(3)](/posts/createTextNode(3).jpg)
 
 3) `insertBefore(추가할 노드, 삽입할 위치 다음의 노드)` : 원하는 위치에 노드 삽입
 
@@ -207,8 +207,8 @@ ul.insertBefore(newLi3, red);   //newLi3가 red 앞에 삽입
 # 6. 이벤트 버블링, 이벤트 위임
 **[이벤트 버블링]**
 - 자식 노드에서 발생한 이벤트가 부모 노드에게 전파되는 것
-![event-bubbling(1)](../public/event-bubbling(1).jpg)
-![event-bubbling(2)](../public/event-bubbling(2).jpg)
+![event-bubbling(1)](/posts/event-bubbling(1).jpg)
+![event-bubbling(2)](/posts/event-bubbling(2).jpg)
 - 이벤트 버블링 방지하기 : `event.stopPropagation()`;
 
 **[이벤트 위임]**
