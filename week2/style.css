@@ -105,7 +105,7 @@ main{
     word-break: break-all;
 }
 
-.button{
+.add-button{
     margin-bottom : 15px;
     padding-top: 7%;
     vertical-align: center;
@@ -118,7 +118,7 @@ main{
     cursor : pointer;
 }
 
-.button:hover{
+.add-button:hover{
     color:var(--navy);
     background-color: white;
     border-color:var(--navy);    
