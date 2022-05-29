@@ -1,0 +1,709 @@
+---
+title: React
+date: 2022-05-27
+description: 코딩앙마의 React js 강좌
+---
+|참고자료|
+|--|
+|[React & js 강좌](https://www.youtube.com/playlist?list=PLZKTXPmaJk8J_fHAzPLH8CJ_HO_M33e7-)|
+
+# 1. 강의소개
+- create-react-app으로 웹서비스 개발 계획
+- functional component 작성법 및 JSX 학습
+- ReactHook(useState, useEffect) 학습
+- JSON-Server로 CRUD 기능 학습
+- Rest API로 POST, PUT, DELETE 학습
+- 필요 준비사항  
+→ nodejs 설치  
+→ IDE 설치  
+→ js 개념
+
+# 2. 설치(create-react-app)
+1. `npx create-react-app [프로젝트명]`  
+- npx : npm이 올라가있는 패키지를 바로 실행해서 설치시켜주는 도구  
+- 코드 실행결과, 프로젝트 경로에 필요 파일들이 생성됨
+
+2. `npm start`
+- 프로젝트 경로에서 cmd 열고 입력
+- 기본 페이지 열림
+
+3. App.js 수정
+- App.js 수정 내용 바로 반영
+**[기본 구조]**
+- `node_modules` : 프로젝트에 사용되는 의존성 모듈이 모여있음  
+→ 이 내용은 `package.json`의 dependencies에도 기록되어있음  
+→ 이 폴더를 지우면 프로젝트가 동작하지 않지만 `npm install`만 해주면 다시 생성 가능(`packages.json`이 있다는 가정하에)  
+→ 따라서, git에 올릴 때도 이 폴더는 제외
+
+- `public`  
+→ `index.html` : id가 root인 div 태그 밑으로 리액트가 실행되어 만들어진 DOM이 구현됨
+
+- `src` : 대부분의 작업이 이루어지는 공간  
+→ App.js : 작업내용이 브라우저에 바로 반영되는 파일  
+→ App.test.js : 이 강좌에서는 필요하지 않으므로 삭제  
+→ index.js : `reportWebVitals();`는 퍼포먼스 관련 코드로 해당 강좌에서 필요하지 않으므로 삭제
+
+# 3.컴포넌트, JSX
+: 리액트로 만든 페이지는 컴포넌트로 구성 → 유지보수 쉬움, 재사용 쉬움
+
+## 컴포넌트란
+- App.js : 프로젝트 생성 시 기본 생성되는 컴포넌트  
+→ 컴포넌트 이름은 대문자로 시작  
+→ 함수형 컴포넌트 : 함수로 이루어진 컴포넌트  
+→ Default로 export됨 ⇒ index.js에서 import하여 사용  
+→ 함수의 return값 = JSX(JavaScript XML)
+
+## 실습
+- 스타일은 객체로 작성
+- `{}`로 변수 및 연산 가능(연산은 숫자 또는 문자열만 가능)
+- App.js
+```
+import './App.css';
+
+function App() {
+  const name = "So Yeon";   //변수 선언
+  const naver = {           //객체 선언
+    name : "네이버",
+    url:"https://naver.com",
+  };
+  return (
+    <div className="App">
+      <h1 style={{          //객체로 스타일 지정
+        color:"red",
+        backgroundColor: "grey",
+      }}
+      >
+        Hello, {name}       //{}로 변수 사용
+        <p>{2+3}</p>        //{}로 연산 사용
+      </h1>
+      <a href={naver.url}>{naver.name}</a>  //{}로 객체 사용
+    </div>
+  );
+}
+
+export default App;
+```
+- 실행결과
+![App.js 실행결과](/posts/React(1)-No.3 Lecture.jpg)
+
+# 4. 첫 컴포넌트 만들기
+1. component 폴더 생성  
+: 앞으로 생성할 컴포넌트는 src 폴더 밑의 component 폴더에 저장  
+※ 컴포넌트 만들기 = js 파일에서 함수 만들고, export해주면 컴포넌트 생성
+
+2. component 파일 작성
+- 컴포넌트는 js 파일로 작성
+- 두 가지 방법으로 작성 가능
+```
+//1. 함수와 export 따로
+const Hello = function(){
+<p>Hello</p>;
+};
+
+export default Hello;
+//2. 함수와 export 한줄로 작성
+export default function Hello(){
+    return  <h1>Hello</h1>;
+}
+```
+
+3. App.js에 import
+- import시, js 확장자명은 기입 안해도 됨
+```
+//import [컴포넌트명] from [컴포넌트 위치]
+import Hello from './component/Hello';
+```
+
+4. 컴포넌트 사용
+- 컴포넌트 사이에 내용이 없을 땐, 한줄로 닫아줘도 됨
+```
+import './App.css';
+import Hello from './component/Hello';
+import Welcome from './component/Welcome';
+
+function App() {
+  return <div className="App">
+    <Hello />
+    <Welcome />
+  </div>;
+}
+
+export default App;
+```
+
+5. 컴포넌트 중첩 사용
+```
+//Hello.js
+import World from "./World";
+
+export default function Hello(){
+    return (
+        <div>
+            <h1>Hello</h1>
+            <World />
+        </div>
+    );
+}
+//World.js
+export default function World(){
+    return <h3>World!</h3>;
+}
+```
+
+# 5. CSS 작성법(module CSS)
+: create-react-app으로 프로젝트 개발 시, 별도의 패키지 설치없이 CSS 사용할 수 있는 3가지 방법
+
+1. 별도의 CSS파일없이 각 태그에 인라인으로 작성
+- 객체로 작성 필수  
+→ Key : 속성(CamelCase로 작성)  
+→ Value : 속성값(문자열은 따옴표로 작성)  
+→ 객체이므로 각 속성은 쉼표로 구분
+
+2. css 파일 활용
+**[index.css]**
+: 전체 프로젝트에 영향을 미치는 스타일
+
+**[App.css]**
+: App Component에 한정된 스타일
+⇒ 각 css파일은 HTML의 `<head>` 태그에 들어감  
+⇒ 모든 페이지에 영향을 미침
+
+3. css 모듈 활용 : 각 컴포넌트에 적용 가능  
+: `[컴포넌트 이름].module.css` 파일 생성
+- import 방법
+```
+import styles from [css 모듈 경로]
+```
+- 스타일 사용 방법
+```
+import styles from './Hello.module.css';
+
+...
+    <div className={styles.box}>Hello</div>
+...
+```
+
+# 6. 이벤트 처리(Handling Events)
+1. 함수 생성 후 전달
+- `onClick` 사용  
+→ 함수명만 기입 : 함수를 실행  
+→ 함수명과 괄호를 함께 기입 : 함수의 반환값을 전달
+```
+export default function Hello(){
+
+    function showName(){
+        console.log("So Yeon");
+    }
+
+    return (
+        <div>
+            <h1>Hello</h1>
+            <button onClick={showName}>Show name</button>
+            <button>Show age</button>
+        </div>
+    );
+}
+```
+
+2. 함수 직접 작성
+- `onClick` 사용 : 함수 직접 작성  
+→ 매개변수 전달이 용이
+```
+export default function Hello(){
+
+    function showName(){
+        console.log("So Yeon");
+    }
+
+    return (
+        <div>
+            <h1>Hello</h1>
+            <button onClick={showName}>Show name</button>
+            <button onClick={() => {
+                console.log(26);
+            }}>Show age</button>
+        </div>
+    );
+}
+//매개변수 전달
+export default function Hello(){
+
+    function showName(){
+        console.log("So Yeon");
+    }
+
+    function showAge(age){
+        console.log(age);
+    }
+
+    return (
+        <div>
+            <h1>Hello</h1>
+            <button onClick={showName}>Show name</button>
+            <button onClick={() => {
+                showAge(30);
+            }}>Show age</button>
+        </div>
+    );
+}
+```
+
+# 7. state, useState
+## state
+: 컴포넌트가 가지고 있는 속성값
+- 속성값이 변경되면 리액트는 UI를 자동으로 업데이트됨
+
+## useState
+- `const [state명, state 변경 함수] = useState("초기값");`
+- useState의 반환값 = 배열
+- 첫번째 반환값 : state = 변수명
+- 두번째 반환값 : state를 변경할 함수
+- state 변경 함수가 호출되어 state값이 변경되면 해당 컴포넌트를 다시 렌더링
+- 동일한 컴포넌트라도 state는 각각 관리됨
+- 다양한 작성 방법
+```
+//1
+import { useState } from "react";
+
+export default function Hello(){
+
+    //let name = "So Yeon";
+    const [name, setName] = useState("So Yeon");
+    function changeName(){
+        const newName = name === "So Yeon" ? "Solyna" : "So Yeon";
+        setName(newName);
+    }
+
+    return (
+        <div>
+            <h1>State</h1>
+            <h2>{name}</h2>
+            <button onClick={changeName}>Change</button>
+        </div>
+    );
+}
+//2
+import { useState } from "react";
+
+export default function Hello(){
+
+    const [name, setName] = useState("So Yeon");
+    function changeName(){
+        setName(name === "So Yeon" ? "Solyna" : "So Yeon");
+    }
+
+    return (
+        <div>
+            <h1>State</h1>
+            <h2>{name}</h2>
+            <button onClick={changeName}>Change</button>
+        </div>
+    );
+}
+//3
+import { useState } from "react";
+
+export default function Hello(){
+
+    const [name, setName] = useState("So Yeon");
+
+    return (
+        <div>
+            <h1>State</h1>
+            <h2>{name}</h2>
+            <button onClick={() => {
+                setName(name === "So Yeon" ? "Solyna" : "So Yeon");
+            }}>Change</button>
+        </div>
+    );
+}
+```
+
+# 8. props
+: 속성값을 의미
+- 컴포넌트에서 수정이 불가능한 값
+- 컴포넌트에서 수정하고 싶다면 새로운 state를 설정해야 함
+```
+import { useState } from "react";
+
+export default function Hello(props){
+
+    console.log(props);
+    const [name, setName] = useState("So Yeon"); 
+    const [age, setAge] = useState(props.age);      //props를 새로운 state로 할당
+
+    return (
+        <div>
+            <h2>{name}({age})</h2>
+            <button onClick={() => {
+                setName(name === "So Yeon" ? "Solyna" : "So Yeon");
+                setAge(age + 1);
+            }}>Change</button>
+        </div>
+    );
+}
+```
+- 한 컴포넌트가 가지고 있는 state를 props로 넘길수도 있음
+```
+//UserName.js
+export default function UserName( {name} ){
+    return <p>Hello, {name} </p>;
+}
+//Hello.js
+import { useState } from "react";
+import UserName from "./UserName";
+
+export default function Hello( {age} ){
+
+    console.log(age);
+    const [name, setName] = useState("So Yeon"); 
+    const msg = age > 19 ? "성인입니다." : "미성년자입니다.";
+
+    return (
+        <div>
+            <h2>{name}({age}) : {msg} </h2>
+            <UserName name={name} />            //{name} : Hello의 state인 name이 UserName의 props로 전달
+            <button onClick={() => {
+                setName(name === "So Yeon" ? "Solyna" : "So Yeon");
+            }}>Change</button>
+        </div>
+    );
+}
+```
+# 9. 더미 데이터 구현, map() 반복문
+## 더미 데이터 구현
+```
+//data.json
+{
+    "days": [
+      {
+        "id": 1,
+        "day": 1
+      },
+      {
+        "id": 2,
+        "day": 2
+      },
+      {
+        "id": 3,
+        "day": 3
+      },
+      {
+        "day": 4,
+        "id": 4
+      }
+    ]
+}
+//dummy 데이터 사용
+import dummy from '../db/data.json';    //data.json을 dummy로 불러오기
+
+export default function DayList(){
+    return (
+        <ul className="list_day">
+            {dummy.days.map(day => (
+                <li key={day.id}>Day {day.day}</li>
+            ))}
+        </ul>
+    );
+}
+```
+
+## map() 반복문 사용
+- 인자값 : 배열
+- 반환값 : 배열(JSX)
+- key : 반복되는 요소의 고유값
+```
+import dummy from '../db/data.json';
+
+export default function DayList(){
+    return (
+        <ul className="list_day">
+            {dummy.days.map(day => (    //map으로 반복문 사용
+                <li key={day.id}>Day {day.day}</li> //key값으로 데이터의 고유값 설정
+            ))}
+        </ul>
+    );
+}
+```
+
+# 10. 라우터 구현 react-router-dom
+## `react-router-dom` 설치
+
+## App.js
+- BrowserRouter : 모든 페이지에 공통 적용
+- Routes : 내부는 url에 따라 다른 페이지 보여줌(v5에서는 Switch)
+- Route : 실제 url과 컴포넌트 연결
+```
+function App() {
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+          <Routes>      
+            <Route exact path="/" element={<DayList />} />      //v6의 사용법
+            <Route path="/day/:day" element={<Day />} />
+            <Route path="*" element={<EmptyPage/>} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+  )
+}
+```
+
+## DayList.js
+- HTML은 a 태그를 사용하지만 리액트 라우터는 `<Link to="경로">`를 사용함
+```
+import { Link } from 'react-router-dom';
+import dummy from '../db/data.json';
+
+export default function DayList(){
+    return (
+        <ul className="list_day">
+            {dummy.days.map(day => (
+                <li key={day.id}>
+                    <Link to={`/day/${day.day}`}>Day {day.day}</Link>
+                </li>
+            ))}
+        </ul>
+    );
+}
+```
+
+## 파라미터 받기
+1. App.js에서 파라미터 사용
+- 콜론(:)으로 파라미터 사용
+```
+<Route path="/day/:day" element={<Day />} />    
+```
+2. 파라미터 가져오기
+- useParams 사용
+```
+//1
+const a = useParams();
+const day = a.day();
+//2
+const a = useParams().day;
+//3
+const { day } = useParams();
+```
+
+# 11. json-server, REST API
+## json-server
+1. json-server 설치
+- `npm install -g json-server`
+
+2. 서버 실행
+- `json-server --watch ./src/db/data.json --port 3001`
+- 서버를 실행할 데이터 경로 기입 및 포트 선택
+
+## REST API
+- REST API = Representational State Transfer API
+- 자원을 이름으로 구분하여 자원의 상태(정보)를 주고 받는 모든 것
+- URI 주소와 메소드로 CRUD 수행
+- Crete : POST
+- Read : GET
+- Update : PUT
+- Delete : DELETE
+
+# 12. useEffect, fetch()로 API 호출
+## useEffect
+- 어떤 상태값이 변경되었을 때 동작하는 함수 작성
+- 첫번째 매개변수 : 함수
+- 두번째 매개변수 : 해당 함수가 동작하게 하는 특정 상태값(의존성 배열 형식)  
+→ 상태값과 무관하게 최초 렌더링 때 한 번만 실행
+- 함수 실행 시점 : 렌더링 결과가 DOM에 반영된 직후, 컴포넌트가 사라지기 직전
+```
+useEffect(() => {
+    console.log("Count change");
+}, [])
+``` 
+
+## fetch
+```
+import Word from "./Word";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+
+export default function Day(){
+    const { day } = useParams();
+    const [words, setWords] = useState([]);
+
+    useEffect(() => {
+        fetch(`http://localhost:3001/words?day=${day}`)
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            setWords(data);
+        })
+    }, [])
+
+    return (
+    <>
+        <h2>Day {day}</h2>
+        <table>
+            <tbody>
+                {words.map(word => (
+                    <Word word={word} key={word.id}/>
+                ))}
+            </tbody>
+        </table>
+    </>
+    );
+}
+```
+# 13. Custom Hooks
+- 반복되는 내용의 코드를 커스텀해서 만들 수 있음
+```
+//useFetch.js
+import { useEffect, useState } from "react";
+
+export default function useFetch(url){
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch(url)
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            setData(data);
+        })
+    }, [])
+
+    return data;
+}
+```
+# 14. PUT(수정), DELETE(삭제)
+
+# 15. POST(생성), useHistory()
+## POST
+- `useRef()` : DOM 생성 뒤 요소에 접근
+
+## useHistory() → useNavigate
+- react-router v6에서 useNavigate로 이름 변경
+- `<Link to>`와 같이 페이지 이동 가능
+```
+export default function CreateDay(){
+    const days = useFetch("http://localhost:3001/days");
+    const history = useNavigate(); 
+
+    function addDay(){
+        fetch(`http://localhost:3001/days`, {
+            method: "POST",
+            headers : {
+                "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({
+                day : days.length + 1
+            }),
+        }).then(res => {
+            if(res.ok){
+                alert('생성이 완료되었습니다.');
+                history(`/`);
+            }
+        });
+    }
+
+    return (
+        <div>
+            <h3>현재 일수 : {days.length}일</h3>
+            <button onClick={addDay}>Day 추가</button>
+        </div>
+    );
+}
+```
+# 16. 마치며
+## 로딩 페이지 구현
+- 개발자 도구 - Network에서 네트워크 속도 조절 가능
+- Slow 3G로 설정하면 느린 네트워크에서의 동작 확인 가능
+```
+import { Link } from 'react-router-dom';
+import useFetch from '../hooks/useFetch';
+
+export default function DayList(){
+    const days = useFetch("http://localhost:3001/days");
+
+    if (days.length === 0){             //useFetch의 초기값이 빈 배열이므로 length가 0일 때는 아직 데이터를 못 받았을 때
+        return <span>Loading...</span>;
+    }
+
+    return (
+        <ul className="list_day">
+            {days.map(day => (
+                <li key={day.id}>
+                    <Link to={`/day/${day.day}`}>Day {day.day}</Link>
+                </li>
+            ))}
+        </ul>
+    );
+}
+```
+## 버튼 동작 제한
+- `useState`를 사용하여 데이터 전송 중일 때에는 버튼이 동작하지 않도록 구현
+```
+const [ isLoading, setisLoading ] = useState(false);    //새 useState 설정
+
+
+function onSubmit(e){
+    e.preventDefault();
+
+    if(!isLoading){             //isLoading이 false일 때만 실행
+        setisLoading(true);     //데이터 전송 시작 부분에서 isLoading을 true로 변환
+        fetch(`http://localhost:3001/words`, {
+            method: "POST",
+            headers : {
+                "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({
+                day : dayRef.current.value,
+                eng : engRef.current.value,
+                kor : korRef.current.value,
+                isDone : false
+            }),
+        }).then(res => {
+            if(res.ok){
+                alert('생성이 완료되었습니다.');
+                history(`/day/${dayRef.current.value}`);
+                setisLoading(false);    //데이터 전송이 끝나면 isLoading을 다시 false로 변환
+            }
+        });
+    }
+
+}
+return (
+<form onSubmit={onSubmit}>
+    <div className="input_area">
+        <label>Eng</label>
+        <input type="text" placeholder="computer" ref={engRef}/>
+    </div>
+    <div className="input_area">
+        <label>Kor</label>
+        <input type="text" placeholder="컴퓨터" ref={korRef}/>
+    </div>
+    <div className="input_area">
+        <label>Day</label>
+        <select ref={dayRef}>
+            {days.map(day => (
+                <option key={day.id} value={day.day}>
+                    {day.day}
+                </option>
+            ))}
+        </select>
+    </div>
+    <button
+        style={{
+            opacity: isLoading ? 0.3 : 1,
+        }}>
+            {isLoading ? "Saving..." : "저장"}
+    </button>
+</form>
+);
+}
+```
+
+# 번외 - ts로 변경하기
+## 파일 확장자 변경
+- js → ts
+- jsx → tsx
+- 아직은 어렵다,,,
