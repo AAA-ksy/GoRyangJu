@@ -1,0 +1,377 @@
+---
+title: React(2)
+date: 2022-06-04
+description: 처음 만난 리액트v2
+---
+> 참고자료  
+> [처음 만난 리액트v2](https://www.youtube.com/playlist?list=PLZKTXPmaJk8J_fHAzPLH8CJ_HO_M33e7-)
+
+# 1. 준비하기(HTML, CSS, Javascript, 개발환경 구축)
+## HTML
+- 마크업 언어의 한 종류  
+※ 마크업 : 문서나 데이터를 처리하기 위해 문서에 추가되는 정보
+- 웹사이트의 뼈대를 구성하기 위해 사용하는 마크업 언어
+### Tag(태그)
+- `<태그이름>`으로 사용
+- 열었으면 꼭 닫아주어야 함  
+**[기본 태그]**  
+- `<html>...</html>` : HTML의 시작과 끝을 알림
+- `<head>...</head>` : 웹사이트의 속성(웹사이트의 기본 정보 = 메타데이터)
+- `<body>...</body>` : 실제 웹사이트에서 보이는 컨텐츠
+### SPA(Single Page Application)
+- 하나의 페이지만 존재하는 웹사이트(웹어플리케이션)
+- 리액트를 통해 SPA를 구현할 것
+- 아래 그림에서 왼쪽이 전통적인 방식, 오른쪽이 SPA가 적용된 방식
+![SPA](/posts/SPA.png)
+
+## CSS(Cascading Style Sheets)
+- 웹페이지의 레이아웃, 디자인
+
+## Javascript(ES6 기준)
+- 정식명칭 = ECMAScript
+- 웹사이트의 동적 기능 역할
+
+### 자료형(Data Type)
+- 변수에 데이터가 대입되는 시점에 자료형 결정(Dynamic Typing) 
+- 변수 선언 = `let`
+- 종류 : Number, String, Boolean, Null, Undefined, Array, Object
+
+### 연산자(Operator)
+- 일치 연산자(Strict equality operators) : 자료형 일치 여부 연산
+
+### 함수(Function)
+- 입력을 받아서 정해진 출력을 하는 것
+1. function statement 사용
+2. arrow function expression 사용
+
+## 개발환경 구축
+1. node.js, npm 설치
+- node.js : js로 네트워크 어플리케이션을 개발할 수 있는 환경을 만들어줌
+- npm(node package manager) : node.js를 위한 패키지 매니저. 프로젝트에 필요한 외부 패키지들에 대한 버전과 의존성 관리
+- `node --version`, `npm --version` : 버전 확인
+
+2. IDE 설치
+
+# 2. 리액트 소개
+## 리액트는 무엇인가?
+- 사용자 인터페이스 개발을 위한 자바스크립트 라이브러리 = 사용자와 웹 사이트의 상호작용을 돕는 인터페이스 개발을 위한 자바스크립트 기능 모음집
+- 라이브러리 : 자주 사용되는 기능들을 정리해 모아놓은 것(개발자에게 프로그램 흐름에 대한 제어 권한 있음)
+- 프레임워크 : 개발자에게 프로그램 흐름에 대한 제어 권한이 없음
+
+## 리액트의 장단점
+### 장점
+- Virtual DOM으로 빠른 업데이트 & 렌더링
+- 컴포넌트 기반의 구조
+- 재사용성(Reusability) → 개발 기간 단축, 유지보수 용이
+- 활발한 지식공유 & 커뮤니티
+
+### 단점
+- 방대한 학습량
+- 계속 뭔가 바뀜...
+- 높은 상태관리 복잡도
+
+# 3. JSX
+## JSX란?
+- A syntax extension to JavaScript = 자바스크립트의 확장 문법
+- JSX = JS + XML/HTML
+
+## JSX의 역할
+- XML/HTML을 JS로 변환하는 역할
+- 내부적으로 `React.createElement` 함수를 호출하여 JS코드로 변환
+
+## JSX의 장점
+- 간결한 코드
+- 가독성 향상
+- Injection Attacks 방어
+
+## JSX 사용법
+```
+..XML/HTML
+{JavaScript 코드}
+...XML/HTML
+// 태그의 속성에 값을 넣는 방법
+// 1. 큰따옴표 사이에 문자열 삽입
+const element = <div tabIndex="0"></div>;
+
+//2. 중괄호 사이에 자바스크립트 코드 삽입
+const element = <img srg={user.avatarUrl}></img>
+```
+
+# 4. Rendering Elements
+## Elements란?
+- 리액트 앱을 구성하는 가장 작은 블록들
+- 리액트의 Virtual DOM에 존재하는 elements
+- 화면에서 보이는 것들을 기술
+
+## Elements의 생김새
+- 자바스크립트 객체 형태로 존재
+- `React.createElement` 함수를 통해 생성
+
+## Elements의 특징
+- 불변성 : Elements **생성 후**에는 children이나 attributes를 바꿀 수 없음
+- 불변성으로 인해 Elements를 업데이트하기 위해서는 새로 만들어서 기존 Elements랑 바꿔야함
+
+# 5. Components and Props
+- Props -입력→ React Component -출력→ React Element
+
+## Props의 정의
+- Property : React Component의 속성
+- 컴포넌트에 전달할 다양한 정보를 담고 있는 자바스크립트 객체
+![props-concept](/posts/props-concept.jpg)
+
+## Props의 특징
+- Read Only : 값을 변경할 수 없음
+- Props 값을 변경하고 싶다면, 새로운 값을 컴포넌트에 전달하여 새로운 Element를 생성
+- 모든 리액트 컴포넌트는 그들의 Props에 관해서는 Pure 함수 같은 역할을 해야한다 = 모든 리액트 컴포넌트는 Props를 직접 바꿀 수 없고, 같은 Props에 대해서는 항상 같은 결과를 보여주어야 한다
+
+## Props 사용법(JSX)
+```
+// 아래 3개 속성이 Profile 컴포넌트의 props로 전달됨
+function App(props){  //컴포넌트
+    return(
+        <Profile    //컴포넌트
+            name = "소연"    //속성
+            introduction="안녕하세요, 소연입니다."  //속성
+            viewCount = {1500}   //속성. 괄호 사용 시, JS 코드 사용 의미
+        />
+    );
+}
+```
+
+## Component 만들기
+- 초기에는 Class Component을 많이 사용했으나 최근엔 Function Component를 더 많이 사용
+- Function Component 개선 과정에서 나온 게 Hook
+
+### Function Component
+```
+function Welcome(props){
+    return <h1>안녕, {props.name}</h1>
+}
+```
+- 간단한 코드
+
+### Class Component
+```
+class Welcome extends React.Component{
+    render(){
+        return <h1>안녕, {this.props.name}</h1>;
+    }
+}
+```
+- 위 Function Component와 동일한 기능을 하는 컴포넌트를 클래스 형식으로 만든 것
+- React.Component를 상속받아야 함
+
+### Component 이름
+- 항상 대문자로 시작해야 한다!
+- 소문자로 작성하면 HTML 태그로 인식
+
+### Component 합성
+- Component 안에 또 다른 Component 사용 가능
+```
+function Welcome(props){
+    return <h1>Hello, {props.name} </h1>;
+}
+
+function App(props){        //App 컴포넌트는 Welcome 컴포넌트 3개를 포함
+    return(
+        <div>
+            <Welcome name="Mike" />
+            <Welcome name="Steve" />
+            <Welcome name="Jane" />
+        </div>
+    );
+}
+
+ReactDOM.render(
+    <App />
+    document.getElementById('root')
+);
+```
+### Component 추출
+- 큰 컴포넌트에서 일부를 추출해서 새로운 컴포넌트 생성
+- 재사용성 향상
+- 개발속도 향상
+
+# 6. State and Lifecycle
+## State
+- 리액트 컴포넌트의 변경 가능한 데이터 = 개발자가 정의하는 데이터
+- 자바스크립트 객체
+- 정의된 state는 정의된 이후 js코드 다루듯이 직접 수정하면 안되고, 함수를 통해 수정해야함
+```
+// state를 직접 수정(잘못된 사용법)
+this.state = {
+    name: "So Yeon"
+};
+
+// setState 함수를 통한 수정(정상적인 방법)
+this.setState({
+    name : "So Yeon"
+});
+```
+## Lifecycle
+- 리액트 컴포넌트의 생명주기
+- 컴포넌트가 계속 존재하는 것이 아니라, 시간의 흐름에 따라 생성되고 업데이트 되다가 사라진다
+
+# 7. Hooks
+## Hook이란?
+- 이름 앞에 use를 붙이는 게 관례
+### Function Componenet VS Class Component
+**[Function Componenet]**
+- state 사용 불가
+- Lifecycle에 따른 기능 구현 불가
+- **Hooks** : 함수 컴포넌트에서도 클래스 컴포넌트의 기능 수행
+
+**[Class Component]**
+- 생성자에서 state를 정의
+- setState() 함수를 통해 state 업데이트
+- Lifecycle methods 제공
+
+## useState()
+- state를 사용하기 위한 훅
+### 사용법
+- `const [변수명, set함수명] = useState(초기값);`
+
+## useEffect()
+- Side Effect를 수행하기 위한 훅 = 다른 컴포넌트에 영향을 미칠 수 있고, 렌더링 중 작업이 완료되지 않는 효과를 수행하기 위한 훅
+### 사용법
+- `useEffect(이펙트 함수, 의존성 배열);`
+- 의존성 배열 : 이펙트가 의존하고 있는 배열로, 배열 안에 있는 값 중 하나라도 변경되었을 때 이펙트 함수가 실행됨
+- 의존성 배열이 빈 배열이면, 이펙트 함수가 mount, unmount시에 단 한번씩만 실행됨
+- 의존성 배열이 생략되면, 컴포넌트가 업데이트 될 때마다 호출됨
+
+## useMemo()
+- Memoized value를 리턴하는 훅
+- memoized value : 연산량이 높은 작업의 반복을 피하기 위해 미리 계산된 값
+- useMemo()에 전달된 함수는 렌더링이 일어나는 동안 실행됨
+- 의존성 배열을 넣지 않을 경우, 매 렌더링마다 함수가 실행됨
+- 의존성 배열이 빈 배열이면, 컴포넌트 마운트 시에만 호출됨
+### 사용법
+```
+const memoizedValue = useMemo(
+    ()=>{
+        //연산량이 높은 작업을 수행하여 결과를 반환
+        return computeExpensiveValue(의존성 변수1, 의존성 변수2);
+    },
+    [의존성 변수1, 의존성 변수2]
+);
+```
+
+## useCallback()
+- useMemo() 훅과 유사하지만 값이 아닌 함수를 반환
+- 의존성 변수 중 하나라도 변경되면 memoization된 콜백함수 반환
+### 사용법
+```
+const memoizedCallback = useCallback(
+    ()=>{
+        dosomething(의존성 변수1, 의존성 변수2);
+    },
+    [의존성 변수1, 의존성 변수2]
+);
+```
+
+## useRef()
+- Reference를 사용하기 위한 훅
+- Reference : 특정 컴포넌트에 접근할 수 있는 객체
+- 초기값으로 초기화된 레퍼런스 객체 반환
+- 초기값이 널이면 레퍼런스 값이 널인 객체 반환
+- 컴포넌트 마운트 해제 전까지 유지
+- 내부의 데이터가 변경되었을 때 별도로 알리지 않음 = 재렌더링 되지 않음
+### 사용법
+- `const refContainer = useRef(초기값);`
+
+## Hook의 규칙
+1. 무조건 최상위 레벨에서만 호출해야 함
+2. 컴포넌트가 렌더링 될 때마다 매번 같은 순서로 호출되어야 함
+3. 리액트 함수 컴포넌트에서만 호출해야 함
+4. 이름은 꼭 use로 시작해야 함
+
+# 8. Handling Events
+## Event
+- 특정 사건을 의미
+- ex) 사용자가 버튼을 클릭한 사건 등
+## DOM의 이벤트
+- `onclick="함수명()"`
+```
+<button onclick="activate()">
+    Activate
+</button>
+```
+
+## 리엑트의 이벤트
+- `onClick={함수명}`
+```
+<button onClick={activate}>
+    Activate
+</button>
+```
+
+## 이벤트 핸들러 = 이벤트 리스너
+- 어떤 사건이 발생하면, 사건을 처리하는 역할
+### 함수 컴포넌트 이벤트 핸들러 사용법
+```
+function Toggle(props){
+    const [isToggleOn, setIsToggleOn] = useState(true);
+
+    //1. 함수 안에 함수로 정의
+    function handleClick(){
+        setIsToggleOn((isToggleOn) => !isToggleOn);
+    }
+
+    //2. arrow function을 사용하여 정의
+    function handleClick = () => {
+        setIsToggleOn((isToggleOn) => !isToggleOn);
+    }
+
+    return (
+        <button onClick={handleClick}>
+            {isToggleOn ? "켜짐" : "꺼짐" }
+        </button>
+    );
+}
+```
+### 함수 컴포넌트 이벤트 핸들러 매개변수
+```
+function MyButton(props){
+    const HandleDelete = (id, event) => {
+        console.log(id, event.target);
+    };
+
+    return (
+        <button onClick={(event) => handleDelete(1, event)}>
+            삭제하기
+        <button>
+    );
+}
+```
+
+# 9. Conditional Rendering
+- 조건에 따른 렌더링 = 조건부 렌더링
+- 어떠한 조건에 따라서 렌더링이 달라지는 것
+
+## Inline IF
+- `true && expression` : expression
+- `false && expression` : false
+
+## Inline Else IF
+- condition ? treu:false
+
+## 컴포넌트 렌더링 막기
+- 리턴값으로 null을 반환하면 됨
+
+# 15. 미니 블로그 실습
+## 미니 블로그 기획
+### 미니 블로그 기능과 컴포넌트
+- 글 목록 보기 기능(리스트 형태) : PostList, PostListItem
+- 글 보기 기능 : Post
+- 댓글 보기 기능 : CommentList, CommentListItem
+- 글 작성 기능 : PostWrite
+- 댓글 작성 기능 : CommentWrite
+
+### 폴더 구성
+```
+src
+|__component
+       |__list : 리스트와 관련된 컴포넌트 
+       |__page : 페이지 컴포넌트 
+       |__ui : UI 컴포넌트(사용자 입력 가능 컴포넌트)
+```
