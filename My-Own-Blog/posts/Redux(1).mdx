@@ -1,0 +1,228 @@
+---
+title: Redux(1)
+date: 2022-06-16
+description: 생활코딩 react-redux
+---
+> 참고자료  
+> [react-redux](https://youtu.be/yjuwpf7VH74)
+
+# Redux란?
+- React와 독립적인 상태관리 도구
+- React에서 쉽게 사용할 수 있는 도구인 react-redux를 통해 React 상태관리를 쉽게 할 수 있음
+
+# Redux를 사용하는 이유
+- 컴포넌트의 상태관리를 용이하게 하기위해서
+## React만 사용했을 경우
+- 하위 컴포넌트에서 props를 사용하기위해, 상위 컴포넌트에서부터 props를 넘겨주어야 함
+- 위 이유로 성능문제 발생 가능성 있음
+```
+import React, { useState } from 'react';
+import './style.css';
+
+export default function App() {
+  const [number, setNumber] = useState(1);
+
+  function onIncrease() {
+    setNumber(number + 1);
+  }
+
+  return (
+    <div id="container">
+      <h1>Root : {number}</h1>
+      <div id="grid">
+        <Left1 number={number}></Left1>
+        <Right1 number={number} onIncrease={onIncrease}></Right1>
+      </div>
+    </div>
+  );
+}
+//가장 하위 컴포넌트인 Left3에서 props를 사용하기위해서, 상위 컴포넌트에서부터 props를 넘겨주어야 함
+function Left1(props) {
+  return (
+    <div>
+      <h1>Left1 : {props.number}</h1>           
+      <Left2 number={props.number}></Left2>
+    </div>
+  );
+}
+
+function Left2(props) {
+  return (
+    <div>
+      <h1>Left2 : {props.number}</h1>
+      <Left3 number={props.number}></Left3>
+    </div>
+  );
+}
+
+function Left3(props) {
+  return (
+    <div>
+      <h1>Left3 : {props.number}</h1>
+    </div>
+  );
+}
+
+function Right1(props) {
+  return (
+    <div>
+      <h1>Right1 : {props.number}</h1>
+      <Right2 number={props.number} onIncrease={props.onIncrease}></Right2>
+    </div>
+  );
+}
+
+function Right2(props) {
+  return (
+    <div>
+      <h1>Right2 : {props.number}</h1>
+      <Right3 number={props.number} onIncrease={props.onIncrease}></Right3>
+    </div>
+  );
+}
+
+function Right3(props) {
+  return (
+    <div>
+      <h1>Right3 : {props.number}</h1>
+      <input
+        type="button"
+        value="+"
+        onClick={() => {
+          props.onIncrease();
+        }}
+      ></input>
+    </div>
+  );
+}
+```
+## react-redux 사용했을 경우
+- 상태 사용을 원하는 컴포넌트에서만 상태 사용 가능
+```
+import './App.css';
+import {createStore} from 'redux';
+import {Provider, useSelector, useDispatch, connect} from 'react-redux';
+
+function reducer(currenState, action){  //현재 상태값과 상태에 수행할 action 정의
+  if(currenState === undefined){        // 현재 상태값이 정의되지 않았을 경우, 초기화값 설정
+    return {
+      number:1
+    };
+  }
+  const newState = {...currenState};    // 상태값 변경을 위해 새로운 변수 선언
+  if(action.type === 'PLUS'){           // 'PLUS' 타입의 action일 경우 수행할 동작
+    newState.number++;
+  }
+  return newState;                      // 반환값은 변경된 상태값
+}
+
+const store = createStore(reducer);    //createStore()로 store 생성
+
+export default function App() {
+
+  return (
+    <div id="container">
+      <h1>Root</h1>
+      <div id="grid">
+        <Provider store={store}>        // 상태값 사용을 원하는 컴포넌트 바깥에서 Provider로 감싸줌. props로 store 전달 필요
+          <Left1></Left1>
+          <Right1></Right1>
+        </Provider>
+      </div>
+    </div>
+  );
+}
+
+function Left1(props) {
+  return (
+    <div>
+      <h1>Left1</h1>
+      <Left2></Left2>
+    </div>
+  );
+}
+
+function Left2(props) {
+  return (
+    <div>
+      <h1>Left2</h1>
+      <Left3></Left3>
+    </div>
+  );
+}
+
+function Left3(props) {
+  /*function f(state){
+    return state.number;
+  }*/
+  const number = useSelector((state)=>state.number);    // useSelector로 원하는 상태값 선택
+  return (
+    <div>
+      <h1>Left3 : {number}</h1>     // 사용을 원하는 컴포넌트에서만 사용 가능
+    </div>
+  );
+}
+
+function Right1(props) {
+  return (
+    <div>
+      <h1>Right1</h1>
+      <Right2></Right2>
+    </div>
+  );
+}
+
+function Right2(props) {
+  return (
+    <div>
+      <h1>Right2</h1>
+      <Right3></Right3>
+    </div>
+  );
+}
+
+function Right3(props) {
+  const dispatch = useDispatch();
+  return (
+    <div>
+      <h1>Right3</h1>
+      <input type="button" value="+" onClick={() => {   
+        dispatch({type:"PLUS"});        // dispatch로 action의 type 설정
+      }}></input>
+    </div>
+  );
+}
+```
+# 설치방법
+- redux 설치 : `npm install redux`
+- react-redux 설치 : `npm install react-redux`
+
+# 사용하기
+## store
+-`createStore(reducer);`로 사용할 store 생성
+- store는 상수로, 변경되어서는 안되는 값
+- reducer를 반드시 만들어주어야 함
+
+### reducer()
+- store안에 있는 state를 어떻게 바꿀 것인가를 정의하는 함수
+- 2개의 파라미터 : 현재의 state값(currentState), 어떻게 바꿀 것인지(action)
+- 반환값 : 새로운 state값
+- 함수 안에서 useDispatch의 type값에 따른 action을 정의
+
+### Provider
+- `import {Provider} from 'react-redux';`
+- state를 어떤 컴포넌트들에게 제공할 것인가를 정의
+- state를 사용할 컴포넌트 가장 바깥에서 Provider 컴포넌트로 감싸면 됨
+- store라는 props를 반드시 정의해야함
+
+
+### useSelector
+- 컴포넌트 내에서 원하는 state를 고를 때 사용
+- state를 인자로 받는 함수가 useSelector의 인자로 들어감
+- `const number = useSelector((state)=>state.number);`
+
+### useDispatch()
+- state의 값을 변경할 때 사용
+- type을 설정하여 reducer를 호출
+- `<input type="button" value="+" onClick={() => {dispatch({type:"PLUS"});}}>`
+- 호출된 reducer에서 수행할 action을 정의
