@@ -1,0 +1,84 @@
+---
+title: 셀프 프로젝트 개발일지#1
+date: 2022-06-24
+description: 셀프 프로젝트(자신감 저장소) 개발일지#1
+---
+> 개발기간  
+> 6.20(월) ~ 6.26(일)
+
+# typescript 설치
+- `npm install typescript @types/node @types/react @types/react-dom @types/jest @types/react-router-dom`
+#
+# tailwind
+## 설치
+1. tailwind와 크로스브라우징을 대응해주는 postcss autoprefixer 함께 설치
+- `npm install -D tailwindcss postcss autoprefixer`
+2. 초기화 파일 생성(tailwind.config.js)
+- `npx tailwindcss init -p`
+3. 템플릿 경로 설정
+```
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/*.{js,tsx}"  //템플릿 적용할 경로 설정
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+```
+## 사용
+- `index.css`에 `@tailwind` 추가
+- js, ts, tsx 파일에서 HTML 태그에 바로 사용 가능(css 파일 만들 필요X)
+- `className` 뒤에 스타일 지정해서 사용하면 됨
+
+# 트러블슈팅
+## 1. Tailwind 관련
+1. `#root:{height:100%;}` 적용 안됨
+- 원인 : 크기를 100%로 적용하기 위해서는 적용대상의 상위 컴포넌트도 100%로 설정되어야함
+- 해결방법 : root의 상위 컴포넌트인 body에도 `height:100%` 설정
+- ※`height:100vh`로 대체 가능: `vh`는 브라우저 기준으로 크기 설정
+
+2. 'input' foucs 상태일 때, 기본 border선 제거 안됨
+- 원인 : 브라우저의 기본 설정 영향인 것으로 추정
+- 시도1 : `border-transparent` 설정  
+   - `hover:border-transparent` 설정 시, 브라우저의 기본 border 나타남  
+   - `className=border-transparent` 설정 시, unfocus일 때 border도 사라짐
+- 시도2 : `hover:outline-none` 설정 시, unfocus일 때의 border가 안 사라짐
+- 아직 해결 못함
+
+## 2. typescript 관련
+1. jsx → tsx 변환 중 index.js 오류
+- 원인 : 
+- 해결방법 : 
+- `const root = ReactDOM.createRoot(document.getElementById('root'));` 부분에서 다음과 같이 오류 발생
+```
+형식 인수 ''Element | DocumentFragment' 형식의 매개 변수에
+HTMElement | null'을(를) 할당할 수 없습니다.
+'null' 유형은 'Element | DocumentFragment' 유형에 할당할 수 없습니다.
+```
+- 오류 부분을 아래와 같이 수정하여 해결
+```
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+const root = ReactDOM.createRoot(rootElement);
+```
+- [참고 사이트](https://velog.io/@seungmini/TypeScript%EC%97%90-React18-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0)
+2. typescript any 사용 가능
+- `tsconfig.json`에서 strict를 false로 하면 any 사용 가능
+
+## 3. 기타
+1. `<h1>`태그 내에 다른 스타일 적용하고 싶을 때
+- 상위태그 내에서 스타일 적용하고 싶은 부분만 `<span>`태그 적용
+
+2. 페이지 확대 및 축소 시 레이아웃 깨짐
+- 원인 : -
+- 해결방법 : 추후 수정 예정
+
+# 진행과정
+![1주차 결과](../public/posts/self-project-week1.jpg)
+- js, jsx → ts, tsx 변환
+- 레이아웃 및 디자인 초기 구현 완료
+   - 디테일하게 수정해야 할 부분은 추후 수정
