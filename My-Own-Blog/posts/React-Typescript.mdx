@@ -26,9 +26,15 @@ description: React&Typescript-Course for Beginners
 ※[참고 : 벨로퍼트와 함께하는 모던 리액트](https://react.vlpt.us/using-typescript/02-ts-react-basic.html)
 
 3. `useRef` 사용
-- 목적 : input 창에서 submit 상태일 때 box-shadow 되돌리기
+- 사용목적 : input 창에서 submit 상태일 때 box-shadow 되돌리기
 - `useRef`는 HTML DOM 요소에 접근할 때 사용
 - `inputRef = useRef<HTMLInputElement>(null)`로 useRef 선언
 - `<HTMLInputElement>`는 `<input>`의 타입
 - onSubmit 함수 내에서 `inputRef.current?.blur()` 해주면 box-shadow 되돌리기 가능
 - `blur()`는 focus 해제 수행
+
+4. `@media` 쿼리
+- 주로 화면의 크기에 따라 스타일을 달리할 때 사용
+- 미디어 쿼리 : 화면(screen), tv, print와 같은 미디어타입과 적어도 하나 이상의 표현식으로 구성
+- `@media (max-width: 1200px){...}`
+   - 1200px보다 작거나 같을 경우, 괄호 안의 스타일 적용

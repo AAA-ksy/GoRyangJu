@@ -1,0 +1,213 @@
+---
+title: 셀프 프로젝트 개발일지#1
+date: 2022-07-02
+description: 셀프 프로젝트(자신감 저장소) 개발일지#2
+---
+> 개발기간  
+> 6.27(월) ~ 7.2(일)
+
+# 금주 목표
+- ~~~유투브 React+Typescript 강의 완강~~~
+- Homepage 페이지 구성
+   - ~~헤더 컴포넌트~~
+   - 아이템 컴포넌트
+   - 버튼
+
+# 1. Link 컴포넌트에서 props 전달 안됨
+## 하려고 하는 것
+- Welcome 페이지에서 사용자로부터 입력받은 name을 Link 컴포넌트를 통해 state로 전달
+   - Welcome : state를 전달하는 컴포넌트
+- Homepage에서 state를 전달받아 name을 화면에 출력
+   - Homepage : state를 받는 컴포넌트
+## 문제상황
+- state가 빈 문자열로 전달되고, 페이지가 동작하지 않음
+## 원인 및 해결방법 
+- 원인
+   - 바보같았던게 Homepage로 보낸다고 해놓고 전달받는 컴포넌트 이름을 Header로 정해놨었다😂
+- 해결방법
+   - 컴포넌트 이름을 Homepage로 바꾸니까 state 전달이 잘 됐다..ㅎㅎㅎ
+## 해결코드
+```
+//App.tsx
+function App() {
+  return (
+    <BrowserRouter>
+    <div className="h-full App">
+      <Routes>
+          <Route path="/" element={<Welcome/>} />
+          <Route path="/home" element={<Homepage/>} />
+      </Routes>
+    </div>
+    </BrowserRouter>
+  );
+}
+
+//Welcome.tsx
+let inputName: string = "";
+return(
+...
+<input id="name" onChange={(e)=>{
+  inputName=e.target.value;
+  //console.log("inputName: "+inputName);
+}}
+<Link to={'/home'} state={{name: inputName}}>입장하기</Link>
+);
+
+//Homepage.tsx
+import {useLocation} from 'react-router-dom';
+
+const location = useLocation();
+console.log("name(Props): "+location.state);
+```
+
+
+# 2. let 변수의 변경값이 Link state로 전달안됨
+## 하려고 하는 것
+```
+//Welcome.tsx
+let inputName: string = "";
+return(
+...
+<input id="name" onChange={(e)=>{
+  inputName=e.target.value;
+  //console.log("inputName: "+inputName);
+}}
+<Link to={'/home'} state={{name: inputName}}>입장하기</Link>
+);
+```
+- `let inputName` 변수 선언
+- onChange로 입력받는 값을 `inputName`에 대입
+- 변경된 `inputName`을 Link state로 전달
+- 변경된 `inputName`이 Homepage 컴포넌트로 전달
+## 문제상황
+- onChange에서 변경된 `inputName`값이 전달되지 않음
+## 원인 및 해결방법
+- 원인
+   - 일반 변수는 값이 변경되어도 재렌더링하지 않음
+   - 변경된 값을 적용하려면 재렌더링 해야함
+- 해결방법
+   - 값이 변경될 때마다 재렌더링하는 `useState()` 사용
+## 해결코드
+```
+//Welcome.tsx
+const [inputName, setInputName] = useState("");
+return(
+  ...
+  <input id="name" onChange={(e)=>{
+          setInputName(e.target.value);
+  }} required/>
+  <Link to={'/home'} state={{name: inputName}}>입장하기</Link>
+);
+```
+
+# 3. state의 타입 지정
+## 하려고 하는 것
+- Link state로 받아온 값을 `useLocation()`으로 받기
+- 받은 값을 Header의 props로 넘겨주기
+## 문제상황
+Header로 props를 넘겨줄 때 오류 발생
+```
+//Homepage.tsx
+export default function Homepage() {
+    const location = useLocation();
+    const name = location.state;
+    return (
+      <Header name={name}/>   //오류 발생
+    );
+  }
+
+//Header.tsx
+export default function Header( props:string ) {   //string 형식의 props
+    return (
+        <div>
+          <h2>{props}</h2>
+        </div>
+    );
+  }
+```
+- 오류메시지 : '{ name: unknown; }' 형식은 'string' 형식에 할당할 수 없습니다.
+
+## 원인 및 해결방법
+- 원인
+   - 모르겠음...
+- 해결방법
+   - `location.state`에 커스텀 인터페이스를 적용하여 name을 객체로 받음
+   - Header에서는 props의 타입에 커스텀 인터페이스를 적용
+```
+//Homepage.tsx
+export interface IName{
+  name: string;
+}
+export default function Homepage() {
+
+    const location = useLocation();
+    const iName = location.state as IName;
+    const name = iName.name;
+    return (
+      <Header name={name}/>
+    );
+  }
+
+//Header.tsx
+import { IName } from "./Homepage";
+
+export default function Header( props:IName ) {
+    return (
+        <div>
+          <h2>{props.name}</h2>
+        </div>
+    );
+  }
+```
+## 이해가 안되는 점
+- 왜 커스텀 인터페티스로 타입 캐스팅을 해주어야 할까?
+- `useLocation()`과 `location.state` 모두 Object인데 그럼 왜 `.`연산자로 name에 접근이 안될까?
+- Header에서는 `props.name`으로 접근해야 될까? 
+- Header의 props 타입을 string으로 주면 Homepage에서 Header로 넘겨주는 부분에서 아래와 같은 에러메시지 출력
+   - '{ name: string; }' 형식은 'string' 형식에 할당할 수 없습니다.
+- 넘겨주는 props인 name의 자료형은 string인데 왜 Header에서 props 자료형은 커스텀 인터페이스인 IName이 되어야 할까?
+
+# 4. flex 내 아이템 정렬
+## 하려고 하는 것
+- 아래 그림처럼 label과 input을 왼쪽정렬, 일렬로 넣고 싶었음
+![모달창](./posts/Add-Item.JPG)
+
+## 문제상황
+- label과 input을 일렬로는 만들었지만 왼쪽정렬이 안됐음
+![문제](./posts/label-input(1).jpg)
+
+## 원인 및 해결방법
+- 원인
+   - label에 width가 100%로 설정되어있던 것
+- 해결방법
+   - label의 min-width:100px로  설정
+   - label-input의 flex-direction에 nowrap 추가
+   - input의 flex: 1 설정
+### flex
+- flex : 플렉스 아이템이 자신의 컨테이너가 차지하는 공간에 맞추기 위해 크기를 키우거나 줄이는 방법을 설정하는 속성
+- 값이 한 개일 때
+   - `<number>` :  `flex-grow` = 플렉스 아이템 요소가 플렉스 컨테이너 요소 내부에서 할당 가능한 공간의 정도
+   - `<length>`, `<percentage>` : `flex-basis` = 플렉스 아이템의 초기 크기 지정
+   - none, auto, initial 중 하나 지정 가능
+- 값이 두 개일 때, 첫번째 값은 `<number>`로 `flex-grow` 지정, 두번째 값은 다음 중 하나
+   - `<number>` : `flex-shrink` = 플렉스 아이템의 줄어드는 크기 지정, 플렉스 아이템이 컨테이너보다 클 때 사용
+   - `<length>`, `<percentage>` : `flex-basis` 
+- 값이 세 개일 때, 다음과 같은 순서 규칙
+   - (1) `<number>` : `flex-grow`
+   - (2) `<number>` : `flex-shrink`
+   - (3) `<length>`, `<percentage>`, `auto` : `flex-basis`
+
+# 진행과정
+![2주차 결과(1)](/posts/self-project-week2(1).jpg)
+![2주차 결과(2)](/posts/self-project-week2(2).jpg)
+- Welcome 입력값을 Homepage에 출력
+![2주차 결과(3)](/posts/self-project-week2(3).jpg)
+- 모달창 구현
+   - '+' 클릭 시, 모달창 팝업
+   - 취소 클릭 시, 모달창 닫기
+
+# 다음주 계획
+- localStorage 활용법 공부
+- localStorage 활용하여 데이터 입출력 및 저장
+- 데이터 저장 시, '+' 앞에 아이템 추가
+- Welcome 페이지 CSS 정리
