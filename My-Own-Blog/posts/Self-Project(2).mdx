@@ -164,7 +164,7 @@ export default function Header( props:IName ) {
 - `useLocation()`과 `location.state` 모두 Object인데 그럼 왜 `.`연산자로 name에 접근이 안될까?
 - Header에서는 `props.name`으로 접근해야 될까? 
 - Header의 props 타입을 string으로 주면 Homepage에서 Header로 넘겨주는 부분에서 아래와 같은 에러메시지 출력
-   - '{ name: string; }' 형식은 'string' 형식에 할당할 수 없습니다.
+   - `'{ name: string; }' 형식은 'string' 형식에 할당할 수 없습니다.`
 - 넘겨주는 props인 name의 자료형은 string인데 왜 Header에서 props 자료형은 커스텀 인터페이스인 IName이 되어야 할까?
 
 # 4. flex 내 아이템 정렬
